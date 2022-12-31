@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FakeChef</string>
+    <string name="create_room">CREATE ROOM</string>
+    <string name="history">HISTORY</string>
+    <string name="help">HELP</string>
+    <string name="credit">Hurriedly Developed by 5akda</string>
+</resources>
