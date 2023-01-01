@@ -14,19 +14,17 @@ class MenuViewModel @Inject constructor(
     private val repository: HomeRepository
 ) : ViewModel() {
 
-    init {
-        playAnimation()
-    }
-
     private val mutableAnimation = MutableStateFlow("")
     val animation = mutableAnimation.asStateFlow()
 
-    private fun playAnimation() {
-        viewModelScope.launch {
-            repository.getAnimatedString()
-                .collect {
-                    mutableAnimation.emit(it)
-                }
+    fun playAnimation() {
+        if (animation.value.isEmpty()) {
+            viewModelScope.launch {
+                repository.getAnimatedString()
+                    .collect {
+                        mutableAnimation.emit(it)
+                    }
+            }
         }
     }
 }

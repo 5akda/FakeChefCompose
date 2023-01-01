@@ -21,28 +21,34 @@ import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
 import iam5akda.fakechef_compose.design_system.theme.TransGray
 import iam5akda.fakechef_compose.design_system.utils.ComposeTools
 import iam5akda.fakechef_compose.home.R
-import iam5akda.fakechef_compose.home.view.menu.MenuViewModel
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-fun MenuScreen(
+internal fun MenuScreen(
     viewModel: MenuViewModel = hiltViewModel(),
+    onClickCreateRoom: () -> Unit,
+    onClickHistory: (String) -> Unit,
+    onClickHelp: () -> Unit
 ) {
     val animatedAppName by viewModel.animation.collectAsStateWithLifecycle()
 
-    MenuScreenContents(
+    LaunchedEffect(Unit) {
+        viewModel.playAnimation()
+    }
+
+    MenuLayoutContent(
         animatedAppName = animatedAppName,
-        onClickCreateRoom = {},
-        onClickHistory = {},
-        onClickHelp = {}
+        onClickCreateRoom = onClickCreateRoom,
+        onClickHistory = onClickHistory,
+        onClickHelp = onClickHelp
     )
 }
 
 @Composable
-private fun MenuScreenContents(
+private fun MenuLayoutContent(
     animatedAppName: String,
     onClickCreateRoom: () -> Unit,
-    onClickHistory: () -> Unit,
+    onClickHistory: (String) -> Unit,
     onClickHelp: () -> Unit
 ) {
     FakeChefTheme {
@@ -84,7 +90,7 @@ private fun MenuAnimatedAppName(
 private fun MenuFeatureSection(
     modifier: Modifier,
     onClickCreateRoom: () -> Unit,
-    onClickHistory: () -> Unit,
+    onClickHistory: (String) -> Unit,
     onClickHelp: () -> Unit
 ) {
     Column(modifier = modifier) {
@@ -105,7 +111,7 @@ private fun MenuFeatureSection(
         ) {
             OutlinedButton(modifier = Modifier
                 .weight(1f),
-                onClick = onClickHistory,
+                onClick = { onClickHistory.invoke("History Jaaa") },
                 border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.primary)
             ) {
                 Text(modifier = Modifier
@@ -144,7 +150,7 @@ private fun MenuFeatureSection(
 )
 @Composable
 private fun HomeScreenPreview() {
-    MenuScreenContents(
+    MenuLayoutContent(
         animatedAppName = "Fake Chef",
         onClickCreateRoom = {},
         onClickHistory = {},
