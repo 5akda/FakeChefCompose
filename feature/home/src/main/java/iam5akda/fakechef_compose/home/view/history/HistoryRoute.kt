@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.NavType
+import iam5akda.fakechef_compose.common.extension.uriEncode
 
 internal fun NavGraphBuilder.historyRoute() {
     this.composable(
@@ -15,12 +16,11 @@ internal fun NavGraphBuilder.historyRoute() {
             }
         )
     ) {
-        HistoryScreeen(
-            argsBundle = it.arguments
-        )
+        HistoryScreen()
     }
 }
 
 internal fun NavController.directionToHistory(message: String) {
-    this.navigate("history/$message")
+    val encodeMessage = message.uriEncode()
+    this.navigate("history/$encodeMessage")
 }

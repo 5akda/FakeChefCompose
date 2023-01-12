@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.FakeChefCompose" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#FFCE3C14</item>
+        <item name="android:statusBarColor">#FFB2300C</item>
+        <item name="android:navigationBarColor">#FFB2300C</item>
     </style>
 </resources>
