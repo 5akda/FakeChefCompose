@@ -30,11 +30,7 @@ internal fun MenuScreen(
     onClickHistory: (String) -> Unit,
     onClickHelp: () -> Unit
 ) {
-    val animatedAppName by viewModel.animation.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.playAnimation()
-    }
+    val animatedAppName by viewModel.animationStateFlow.collectAsStateWithLifecycle()
 
     MenuLayoutContent(
         animatedAppName = animatedAppName,
@@ -111,7 +107,7 @@ private fun MenuFeatureSection(
         ) {
             OutlinedButton(modifier = Modifier
                 .weight(1f),
-                onClick = { onClickHistory.invoke("History Jaaa") },
+                onClick = { onClickHistory.invoke("NOT FINISH") },
                 border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.primary)
             ) {
                 Text(modifier = Modifier
@@ -145,7 +141,7 @@ private fun MenuFeatureSection(
 
 @Preview(
     uiMode = ComposeTools.PREVIEW_IN_NIGHT,
-    showBackground = false,
+    showBackground = true,
     device = Devices.PIXEL_3
 )
 @Composable

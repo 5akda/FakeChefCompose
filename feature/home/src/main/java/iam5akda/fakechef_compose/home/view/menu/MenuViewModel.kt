@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import iam5akda.fakechef_compose.home.repository.HomeRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,17 +12,17 @@ class MenuViewModel @Inject constructor(
     private val repository: HomeRepository
 ) : ViewModel() {
 
-    private val mutableAnimation = MutableStateFlow("")
-    val animation = mutableAnimation.asStateFlow()
+    val animationStateFlow: StateFlow<String> = appNameAnimationFlow().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = ""
+    )
 
-    fun playAnimation() {
-        if (animation.value.isEmpty()) {
-            viewModelScope.launch {
-                repository.getAnimatedString()
-                    .collect {
-                        mutableAnimation.emit(it)
-                    }
-            }
-        }
+    private fun appNameAnimationFlow(): Flow<String> {
+        return repository.getAnimatedString(ANIMATION_REPEAT)
+    }
+
+    companion object {
+        private const val ANIMATION_REPEAT = 3
     }
 }
