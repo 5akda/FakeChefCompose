@@ -35,7 +35,8 @@ class HomeAnimationSource @Inject constructor(
                     emit(it)
                 }
             }
-        }.flowOn(dispatcher)
+        }
+            .flowOn(dispatcher)
     }
 
     override fun getHistoryList(): Flow<List<GameHistory>> {
@@ -48,7 +49,8 @@ class HomeAnimationSource @Inject constructor(
         return flow {
             delay(MOCK_LOAD_DELAY)
             emit(mockData)
-        }.flowOn(dispatcher)
+        }
+            .flowOn(dispatcher)
     }
 
     companion object {

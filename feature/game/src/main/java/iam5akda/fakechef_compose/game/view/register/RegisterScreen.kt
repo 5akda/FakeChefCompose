@@ -3,6 +3,7 @@ package iam5akda.fakechef_compose.game.view.register
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -11,13 +12,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import iam5akda.fakechef_compose.common.extension.lettersAndDigits
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
 import iam5akda.fakechef_compose.design_system.utils.ComposeTools
@@ -46,13 +52,21 @@ private fun RegisterLayoutContent(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 24.dp)
             ) {
+                val focusManager = LocalFocusManager.current
+
                 OutlinedTextField(modifier = Modifier
                     .fillMaxWidth(),
                     value = roomCodeText,
                     onValueChange = { roomCodeText = it.lettersAndDigits() },
                     keyboardOptions = KeyboardOptions(
                         autoCorrect = false,
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onBackground,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 18.sp
                     ),
                     label = {
                         Text(text = stringResource(id = R.string.label_room_code))
@@ -71,7 +85,16 @@ private fun RegisterLayoutContent(
                     onValueChange = { yourNameText = it.lettersAndDigits() },
                     keyboardOptions = KeyboardOptions(
                         autoCorrect = false,
-                        keyboardType = KeyboardType.Email
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { focusManager.clearFocus() }
+                    ),
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onBackground,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 18.sp
                     ),
                     label = {
                         Text(text = stringResource(id = R.string.label_your_name))
@@ -89,7 +112,7 @@ private fun RegisterLayoutContent(
                 .padding(horizontal = 24.dp, vertical = 24.dp)
                 .align(Alignment.BottomCenter),
                 onClick = {
-                    onClickJoin.invoke(roomCodeText,roomCodeText)
+                    onClickJoin.invoke(roomCodeText, yourNameText)
                 }
             ) {
                 Text(modifier = Modifier

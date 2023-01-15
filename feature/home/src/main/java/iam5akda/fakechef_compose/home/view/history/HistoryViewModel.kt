@@ -14,7 +14,7 @@ class HistoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val argMessage: String? = savedStateHandle["message"]
+    val argMessage: String? = savedStateHandle[HistoryRoute.ARG_MESSAGE]
 
     val historyUiStateFlow: StateFlow<HistoryUiState> = flowHistoryList().stateIn(
         scope = viewModelScope,

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'iam5akda.fakechef_compose.game'
+    namespace 'iam5akda.fakechef_compose.data'
     compileSdk 33
 
     defaultConfig {

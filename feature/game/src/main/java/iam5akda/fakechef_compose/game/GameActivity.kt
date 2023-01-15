@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,9 +14,6 @@ class GameActivity : ComponentActivity() {
         setContent {
             GameNavigation()
         }
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() = Unit
-        })
     }
 
     companion object {

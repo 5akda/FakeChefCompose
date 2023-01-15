@@ -7,6 +7,9 @@ buildscript {
         dagger_hilt_version = "2.44.2"
         navigation_version = "2.5.3"
     }
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.14'
+    }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id 'com.android.application' version '7.3.1' apply false
