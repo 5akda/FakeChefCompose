@@ -15,6 +15,7 @@ dependencyResolutionManagement {
 rootProject.name = "Fake Chef Compose"
 include ':app'
 include ':core:design-system'
-include ':feature'
-include ':feature:home'
 include ':core:common'
+include ':core:data'
+include ':feature:home'
+include ':feature:game'

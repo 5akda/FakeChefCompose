@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "137675558402",
+    "firebase_url": "https://fakechefcompose-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fakechefcompose",
+    "storage_bucket": "fakechefcompose.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137675558402:android:2ee3ce95695ddfc504e11b",
+        "android_client_info": {
+          "package_name": "iam5akda.fakechef_compose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "137675558402-ql726nac5qvff61s96agdksesom85e0g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqLtVJqhbFKgrIP3G3ur2msQ7vuc5SLBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "137675558402-ql726nac5qvff61s96agdksesom85e0g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

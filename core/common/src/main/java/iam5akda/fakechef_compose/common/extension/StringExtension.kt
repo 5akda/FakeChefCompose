@@ -13,3 +13,7 @@ fun String?.uriDecode(): String {
         Uri.decode(this)
     } ?: ""
 }
+
+fun String.lettersAndDigits(): String {
+    return this.filter { it.isLetterOrDigit() }
+}

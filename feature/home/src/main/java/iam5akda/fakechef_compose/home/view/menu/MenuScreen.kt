@@ -96,7 +96,7 @@ private fun MenuFeatureSection(
         ) {
             Text(modifier = Modifier
                 .padding(vertical = 2.dp),
-                text = stringResource(id = R.string.create_room),
+                text = stringResource(id = R.string.play),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.h6
             )

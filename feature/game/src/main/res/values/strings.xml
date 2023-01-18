@@ -1,0 +1,9 @@
+<resources>
+    <string name="title_activity_game">GameActivity</string>
+    <string name="label_room_code">Room Code</string>
+    <string name="label_your_name">Your Name</string>
+    <string name="button_join_room">JOIN ROOM</string>
+    <string name="button_start_game">START GAME</string>
+    <string name="lobby_room_code" formatted="true">Room: %1$s</string>
+    <string name="lobby_host_name" formatted="true">Host: %1$s</string>
+</resources>
