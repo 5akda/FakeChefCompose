@@ -1,19 +1,30 @@
 package iam5akda.fakechef_compose.game.view.lobby
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
+import iam5akda.fakechef_compose.game.R
 import iam5akda.fakechef_compose.game.model.GameLobbyData
 import iam5akda.fakechef_compose.game.view.components.ExitLobbyDialog
+import iam5akda.fakechef_compose.game.view.components.PlayerItemLayout
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -22,22 +33,21 @@ internal fun LobbyScreen(
     backToRegister: () -> Unit
 ) {
     val lobbyUiState by viewModel.lobbyUiState.collectAsStateWithLifecycle()
-    val exitLobbyState by viewModel.exitLobbyState.collectAsStateWithLifecycle(false)
 
     LobbyContentLayout(
         lobbyUiState = lobbyUiState,
-        onConfirmExit = viewModel::leaveRoom
+        onConfirmExit = viewModel::leaveRoom,
+        onClickStart = viewModel::hostStartGame,
+        backToRegister = backToRegister
     )
-
-    if (exitLobbyState) {
-        backToRegister.invoke()
-    }
 }
 
 @Composable
 private fun LobbyContentLayout(
     lobbyUiState: LobbyUiState,
-    onConfirmExit: () -> Unit
+    onConfirmExit: () -> Unit,
+    onClickStart: () -> Unit,
+    backToRegister: () -> Unit
 ) {
     var isShowExitDialog by remember { mutableStateOf(false) }
 
@@ -53,14 +63,25 @@ private fun LobbyContentLayout(
                 LobbyLoadingLayout(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(MaterialTheme.colors.background)
                 )
             }
-            is LobbyUiState.Success -> {
+            is LobbyUiState.Idle -> {
                 LobbySuccessLayout(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    gameLobbyData = lobbyUiState.lobbyData
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.background),
+                    gameLobbyData = lobbyUiState.lobbyData,
+                    roomCode = lobbyUiState.roomCode,
+                    tempUserId = lobbyUiState.tempUserId,
+                    onClickStart = onClickStart
                 )
+            }
+            is LobbyUiState.Ordering -> {
+                Toast.makeText(LocalContext.current, "Test:: Ordering", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                backToRegister.invoke()
             }
         }
     }
@@ -84,8 +105,71 @@ private fun LobbyLoadingLayout(modifier: Modifier) {
 }
 
 @Composable
-private fun LobbySuccessLayout(modifier: Modifier, gameLobbyData: GameLobbyData) {
+private fun LobbySuccessLayout(
+    modifier: Modifier,
+    gameLobbyData: GameLobbyData,
+    onClickStart: () -> Unit,
+    roomCode: String,
+    tempUserId: String
+) {
     Box(modifier = modifier) {
-        Text(text = gameLobbyData.host.orEmpty())
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .align(Alignment.TopStart)
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = stringResource(R.string.lobby_room_code, roomCode),
+                fontSize = 18.sp,
+                color = MaterialTheme.colors.primary,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                text = stringResource(R.string.lobby_host_name, gameLobbyData.getHostPlayer().name),
+                fontSize = 18.sp,
+                color = MaterialTheme.colors.primary,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
+            )
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)
+            ) {
+                items(gameLobbyData.getPlayerList()) { player ->
+                    PlayerItemLayout(
+                        modifier = Modifier
+                            .padding(top = 4.dp, start = 4.dp, end = 4.dp)
+                            .alpha(0.7f)
+                            .fillMaxWidth(),
+                        playerData = player
+                    )
+                }
+            }
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+                .align(Alignment.BottomCenter),
+            onClick = onClickStart,
+            enabled = gameLobbyData.isHost(tempUserId)
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(vertical = 2.dp),
+                text = stringResource(id = R.string.button_start_game),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.h6
+            )
+        }
     }
 }

@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.util.*
 import javax.inject.Inject
 
 class GameRealtimeSource @Inject constructor(
@@ -17,10 +18,14 @@ class GameRealtimeSource @Inject constructor(
 ) : GameRepository {
 
     override fun registerPlayer(roomCode: String, yourName: String): Flow<String> {
-        val tempUserId = System.currentTimeMillis().toString()
+        val tempUserId = UUID.randomUUID().toString()
         return realtimeDatabaseUtility.setRealtimeValue(
             reference = "$LOBBY_PATH/$roomCode/players/$tempUserId",
-            value = PlayerData(name = yourName)
+            value = PlayerData(
+                name = yourName,
+                registeredTime = System.currentTimeMillis(),
+                tempUserId = tempUserId
+            )
         )
             .map { tempUserId }
             .flowOn(dispatcher)

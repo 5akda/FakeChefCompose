@@ -5,15 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import iam5akda.fakechef_compose.common.extension.uriDecode
+import iam5akda.fakechef_compose.game.model.GameLobbyData
+import iam5akda.fakechef_compose.game.model.LobbySessionStatus
 import iam5akda.fakechef_compose.game.repository.GameRepository
+import iam5akda.fakechef_compose.game.repository.HostRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LobbyViewModel @Inject constructor(
-    private val repository: GameRepository,
+    private val gameRepository: GameRepository,
+    private val hostRepository: HostRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -35,30 +38,59 @@ class LobbyViewModel @Inject constructor(
         initialValue = LobbyUiState.Loading
     )
 
-    private val _exitLobbyState = MutableSharedFlow<Boolean>()
-    val exitLobbyState: SharedFlow<Boolean> = _exitLobbyState
-
     fun leaveRoom() {
-        viewModelScope.launch {
-            repository.leaveRoom(roomCode = roomCode, tempUserId = tempUserId)
-                .collect {
-                    _exitLobbyState.emit(true)
-                }
-        }
+        gameRepository.leaveRoom(roomCode = roomCode, tempUserId = tempUserId)
+            .launchIn(viewModelScope)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun hostStartGame() {
+        val mutablePlayerList = (lobbyUiState.value as LobbyUiState.Idle)
+            .lobbyData.getPlayerList().toMutableList()
+
+        mutablePlayerList.shuffle()
+
+        hostRepository.assignHeadChef(roomCode, mutablePlayerList.removeFirst().tempUserId)
+            .flatMapLatest {
+                hostRepository.assignFakeChef(roomCode, mutablePlayerList.removeFirst().tempUserId)
+            }
+            .flatMapLatest {
+                hostRepository.setLobbyStatus(roomCode, LobbySessionStatus.ORDERING)
+            }
+            .launchIn(viewModelScope)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun flowLobbySession(): Flow<LobbyUiState> {
-        return repository.registerPlayer(roomCode, yourName)
+        return gameRepository.registerPlayer(roomCode, yourName)
             .flatMapLatest {
                 tempUserId = it
-                repository.streamLobbySession(roomCode)
+                gameRepository.streamLobbySession(roomCode)
             }
             .map {
-                LobbyUiState.Success(it, roomCode)
+                processLobbySession(it)
             }
-            .catch { throwable ->
-                throwable.printStackTrace()
+            .catch {
+                emit(LobbyUiState.Kicked)
             }
+    }
+
+    private fun processLobbySession(data: GameLobbyData): LobbyUiState {
+        return when (data.status) {
+            LobbySessionStatus.IDLE.name -> {
+                val thisPlayer = data.getPlayerList().find { it.tempUserId == tempUserId }
+                if (thisPlayer != null) {
+                    LobbyUiState.Idle(data, roomCode, tempUserId)
+                } else {
+                    LobbyUiState.Kicked
+                }
+            }
+            LobbySessionStatus.ORDERING.name -> {
+                LobbyUiState.Ordering(roomCode, tempUserId)
+            }
+            else -> {
+                throw RuntimeException()
+            }
+        }
     }
 }

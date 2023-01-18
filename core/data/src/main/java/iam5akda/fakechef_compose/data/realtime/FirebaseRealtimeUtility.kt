@@ -1,5 +1,6 @@
 package iam5akda.fakechef_compose.data.realtime
 
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -16,11 +17,9 @@ class FirebaseRealtimeUtility @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase
 ) : RealtimeDatabaseUtility {
 
-    private var valueListener: ValueEventListener? = null
-
     override fun <T> getRealtimeValue(reference: String, type: Class<T>): Flow<T> {
         return callbackFlow {
-            valueListener = object : ValueEventListener {
+            val valueListener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val data = snapshot.getValue(type)
                     data?.let {
@@ -33,19 +32,39 @@ class FirebaseRealtimeUtility @Inject constructor(
                 }
             }
 
-            valueListener?.let {
-                firebaseDatabase.getReference(reference).addValueEventListener(it)
-            }
+            firebaseDatabase.getReference(reference).addValueEventListener(valueListener)
 
             awaitClose {
-                clearRealtimeListener(reference)
+                firebaseDatabase.getReference(reference).removeEventListener(valueListener)
             }
         }
     }
 
-    override fun clearRealtimeListener(reference: String) {
-        valueListener?.let {
-            firebaseDatabase.getReference(reference).removeEventListener(it)
+    override fun <T> getRealtimeListValue(reference: String, type: Class<T>): Flow<List<T>> {
+        val itemList = mutableListOf<T>()
+        return callbackFlow {
+            val listEventListener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    itemList.clear()
+                    for (postSnapshot in snapshot.children) {
+                        postSnapshot.getValue(type)?.let {
+                            itemList.add(it)
+                            Log.d("MYTEST :: ", it.toString())
+                        }
+                    }
+                    trySendBlocking(itemList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    throw FirebaseRealtimeException(error.message)
+                }
+            }
+
+            firebaseDatabase.getReference(reference).addValueEventListener(listEventListener)
+
+            awaitClose {
+                firebaseDatabase.getReference(reference).removeEventListener(listEventListener)
+            }
         }
     }
 

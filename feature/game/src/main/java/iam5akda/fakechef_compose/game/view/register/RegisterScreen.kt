@@ -107,13 +107,15 @@ private fun RegisterLayoutContent(
                     }
                 )
             }
-            Button(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 24.dp)
-                .align(Alignment.BottomCenter),
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
+                    .align(Alignment.BottomCenter),
                 onClick = {
                     onClickJoin.invoke(roomCodeText, yourNameText)
-                }
+                },
+                enabled = roomCodeText.isNotEmpty() && yourNameText.isNotEmpty()
             ) {
                 Text(modifier = Modifier
                     .padding(vertical = 2.dp),
