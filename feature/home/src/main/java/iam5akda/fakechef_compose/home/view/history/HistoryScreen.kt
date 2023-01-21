@@ -1,6 +1,6 @@
 package iam5akda.fakechef_compose.home.view.history
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import iam5akda.fakechef_compose.design_system.components.GiantLoadingLayout
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
 import iam5akda.fakechef_compose.design_system.utils.ComposeTools
 import iam5akda.fakechef_compose.home.model.GameHistory
@@ -39,27 +40,22 @@ private fun HistoryLayoutContent(historyUiState: HistoryUiState) {
             .fillMaxSize()
         ) {
             when (historyUiState) {
-                is HistoryUiState.Success -> HistorySuccessLayout(modifier = Modifier
-                    .fillMaxSize(),
-                    historyList = historyUiState.historyList
-                )
-                is HistoryUiState.Loading -> HistoryLoadingLayout(modifier = Modifier
-                    .fillMaxSize()
-                )
+                is HistoryUiState.Success -> {
+                    HistorySuccessLayout(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        historyList = historyUiState.historyList
+                    )
+                }
+                is HistoryUiState.Loading -> {
+                    GiantLoadingLayout(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colors.background)
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun HistoryLoadingLayout(modifier: Modifier) {
-    Box(modifier = modifier) {
-        CircularProgressIndicator(modifier = Modifier
-            .fillMaxSize()
-            .padding(64.dp),
-            color = MaterialTheme.colors.primary,
-            strokeWidth = 24.dp,
-        )
     }
 }
 

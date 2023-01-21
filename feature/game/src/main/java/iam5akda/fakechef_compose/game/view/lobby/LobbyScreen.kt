@@ -15,14 +15,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import iam5akda.fakechef_compose.design_system.components.GiantLoadingLayout
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
+import iam5akda.fakechef_compose.design_system.utils.ComposeTools
 import iam5akda.fakechef_compose.game.R
 import iam5akda.fakechef_compose.game.model.GameLobbyData
+import iam5akda.fakechef_compose.game.model.PlayerData
 import iam5akda.fakechef_compose.game.view.components.ExitLobbyDialog
 import iam5akda.fakechef_compose.game.view.components.PlayerItemLayout
 
@@ -58,9 +63,10 @@ private fun LobbyContentLayout(
                 onClickYes = onConfirmExit
             )
         }
+
         when (lobbyUiState) {
             is LobbyUiState.Loading -> {
-                LobbyLoadingLayout(
+                GiantLoadingLayout(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colors.background)
@@ -88,19 +94,6 @@ private fun LobbyContentLayout(
 
     BackHandler(enabled = true) {
         isShowExitDialog = true
-    }
-}
-
-@Composable
-private fun LobbyLoadingLayout(modifier: Modifier) {
-    Box(modifier = modifier) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(64.dp),
-            color = MaterialTheme.colors.primary,
-            strokeWidth = 24.dp,
-        )
     }
 }
 
@@ -171,5 +164,30 @@ private fun LobbySuccessLayout(
                 style = MaterialTheme.typography.h6
             )
         }
+    }
+}
+
+@Preview(
+    uiMode = ComposeTools.PREVIEW_IN_NIGHT,
+    showBackground = true,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun LobbySuccessLayoutPreview() {
+    val data = GameLobbyData(
+        players = hashMapOf(
+            Pair("", PlayerData(name = "Nabuki"))
+        )
+    )
+    FakeChefTheme {
+        LobbySuccessLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            gameLobbyData = data,
+            onClickStart = {},
+            roomCode = "987654",
+            tempUserId = ""
+        )
     }
 }
