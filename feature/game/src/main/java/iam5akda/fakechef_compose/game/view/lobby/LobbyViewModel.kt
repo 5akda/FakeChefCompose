@@ -13,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class LobbyViewModel @Inject constructor(
     private val gameRepository: GameRepository,
@@ -43,7 +44,6 @@ class LobbyViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun hostStartGame() {
         val mutablePlayerList = (lobbyUiState.value as LobbyUiState.Idle)
             .lobbyData.getPlayerList().toMutableList()
@@ -60,7 +60,6 @@ class LobbyViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun flowLobbySession(): Flow<LobbyUiState> {
         return gameRepository.registerPlayer(roomCode, yourName)
             .flatMapLatest {

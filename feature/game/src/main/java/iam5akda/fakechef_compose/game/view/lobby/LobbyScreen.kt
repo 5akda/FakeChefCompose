@@ -54,7 +54,9 @@ private fun LobbyContentLayout(
     onClickStart: () -> Unit,
     backToRegister: () -> Unit
 ) {
-    var isShowExitDialog by remember { mutableStateOf(false) }
+    var isShowExitDialog by remember {
+        mutableStateOf(false)
+    }
 
     FakeChefTheme {
         if (isShowExitDialog) {
@@ -63,7 +65,12 @@ private fun LobbyContentLayout(
                 onClickYes = onConfirmExit
             )
         }
+        BackHandler(enabled = true) {
+            isShowExitDialog = true
+        }
+    }
 
+    FakeChefTheme {
         when (lobbyUiState) {
             is LobbyUiState.Loading -> {
                 GiantLoadingLayout(
@@ -91,10 +98,6 @@ private fun LobbyContentLayout(
             }
         }
     }
-
-    BackHandler(enabled = true) {
-        isShowExitDialog = true
-    }
 }
 
 @Composable
@@ -105,6 +108,16 @@ private fun LobbySuccessLayout(
     roomCode: String,
     tempUserId: String
 ) {
+    var isGameStarting by remember {
+        mutableStateOf(false)
+    }
+    val hostStartGame = remember {
+        {
+            isGameStarting = true
+            onClickStart.invoke()
+        }
+    }
+
     Box(modifier = modifier) {
         Column(
             modifier = Modifier
@@ -153,8 +166,8 @@ private fun LobbySuccessLayout(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 24.dp)
                 .align(Alignment.BottomCenter),
-            onClick = onClickStart,
-            enabled = gameLobbyData.isHost(tempUserId)
+            onClick = hostStartGame,
+            enabled = gameLobbyData.isHost(tempUserId) && !isGameStarting
         ) {
             Text(
                 modifier = Modifier
