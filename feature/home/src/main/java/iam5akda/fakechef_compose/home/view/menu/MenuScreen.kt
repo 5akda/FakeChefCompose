@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
 import iam5akda.fakechef_compose.design_system.theme.TransGray
-import iam5akda.fakechef_compose.design_system.utils.ComposeTools
+import iam5akda.fakechef_compose.design_system.util.ComposeTools
 import iam5akda.fakechef_compose.home.R
 
 @OptIn(ExperimentalLifecycleComposeApi::class)

@@ -1,4 +1,4 @@
-package iam5akda.fakechef_compose.game.view.components
+package iam5akda.fakechef_compose.game.view.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
-import iam5akda.fakechef_compose.design_system.utils.ComposeTools
+import iam5akda.fakechef_compose.design_system.util.ComposeTools
 
 @Composable
 internal fun ExitLobbyDialog(
