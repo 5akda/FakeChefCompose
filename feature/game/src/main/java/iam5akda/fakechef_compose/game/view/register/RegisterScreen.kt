@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import iam5akda.fakechef_compose.common.extension.lettersAndDigits
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
-import iam5akda.fakechef_compose.design_system.utils.ComposeTools
+import iam5akda.fakechef_compose.design_system.util.ComposeTools
 import iam5akda.fakechef_compose.game.R
 
 @Composable

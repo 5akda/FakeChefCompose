@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import iam5akda.fakechef_compose.design_system.components.GiantLoadingLayout
+import iam5akda.fakechef_compose.design_system.component.GiantLoadingLayout
 import iam5akda.fakechef_compose.design_system.theme.FakeChefTheme
-import iam5akda.fakechef_compose.design_system.utils.ComposeTools
+import iam5akda.fakechef_compose.design_system.util.ComposeTools
 import iam5akda.fakechef_compose.home.model.GameHistory
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
